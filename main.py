@@ -55,8 +55,7 @@ while True:     # Main game exploration loop
                 bandit_hp = 50
                 print(f"\nA Bandit Appeared!\nYour Hp: {player_hp}\nBandit Hp: {bandit_hp}")
                     
-                while player_hp >0 and bandit_hp >0: # Battle loop continues
-                while both fighters are alive
+                while player_hp >0 and bandit_hp >0: # Battle loop continues while both fighters are alive
                     print("\n1. Attack\n2. Run")
                     choice = input("Choose: ")
                     if choice == '1':
