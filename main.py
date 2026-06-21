@@ -36,7 +36,8 @@ while True:
             "level": 1,
             "hp": 100,
             "chakra": 50,
-            "xp" : 0
+            "xp" : 0,
+            "ryo": 0
         }
         save_game()  # Save player data to a JSON file            
         break
@@ -50,6 +51,7 @@ while True:
             print(f"HP: {player['hp']}")
             print(f"Chakra: {player['chakra']}")
             print(f"XP: {player['xp']}")
+            print(f"Ryo: {player['ryo']}")
             break
         
         
@@ -92,11 +94,14 @@ while True:     # Main game exploration loop
                         elif bandit_hp <= 0:
                             print("You defeated the Bandit!!")
                             # ===== EXPERIENCE REWARD SYSTEM =====
-                            # Grant XP reward for a successful battle
-                            xp_gain = random.randrange(70, 155)
+                            # Grant XP, Ryo reward for a successful battle
+                            xp_gain = random.randint(70, 111)
                             player["xp"] += xp_gain
+                            ryo_gain = random.randint(30, 52)
+                            player["ryo"] += ryo_gain
                             # Display progression update
                             print(f"You gained {xp_gain} XP!!")
+                            print(f"You earned {ryo_gain} Ryo!")
                             while player["xp"] >= 500:
                                 player["level"] += 1
                                 player["xp"] -= 500  #stores the remaining xp after levelling up
