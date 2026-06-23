@@ -7,7 +7,12 @@ print("====SHINOBI QUEST====\n1. New Game\n2. Load Game\n3. Exit") # Display the
 def save_game():
     with open("save.json","w") as file:
         json.dump(player, file)
-    
+def add_item(item, amount=1):
+    if item in player["inventory"]:
+        player["inventory"][item] += amount
+    else:
+        player["inventory"][item] = amount
+    print(f"{amount}x {item} added to your Inventory.")
 while True:
     choice = input("Choose: ") # Get the player's menu choice
     if choice == '1': # Start a new game
@@ -37,9 +42,14 @@ while True:
             "hp": 100,
             "chakra": 50,
             "xp" : 0,
-            "ryo": 0
+            "ryo": 0,
+            "bandit_defeated": 0,
+            "boss_defeated": 0,
+            "inventory": {}
         }
         save_game()  # Save player data to a JSON file            
+        # for item in player["inventory"]:
+        #     print(item, player['inventory'][item])
         break
         
     elif choice == '2':
@@ -52,6 +62,8 @@ while True:
             print(f"Chakra: {player['chakra']}")
             print(f"XP: {player['xp']}")
             print(f"Ryo: {player['ryo']}")
+            print(f"Bandit Defeated: {player['bandit_defeated']}")
+            print(f"Boss Defeated: {player['boss_defeated']}")
             break
         
         
@@ -66,7 +78,7 @@ while True:     # Main game exploration loop
         break
     elif choice_journey == "1":
         while True:     # Exploration menu
-            print("\n1. Search\n2. Exit")
+            print("\n1. Search\n2. Inventory\n3. Exit")
             choice_search = input("Choose: ")
             
             if choice_search == "1":    # Start a random encounter
@@ -92,21 +104,29 @@ while True:     # Main game exploration loop
                             break
 
                         elif bandit_hp <= 0:
-                            print("You defeated the Bandit!!")
+                            print("\nYou defeated the Bandit!!")
                             # ===== EXPERIENCE REWARD SYSTEM =====
                             # Grant XP, Ryo reward for a successful battle
                             xp_gain = random.randint(70, 111)
                             player["xp"] += xp_gain
                             ryo_gain = random.randint(30, 52)
                             player["ryo"] += ryo_gain
+                            player["bandit_defeated"] += 1
+                            potion_gain = random.randint(1, 2)
+                            
                             # Display progression update
                             print(f"You gained {xp_gain} XP!!")
                             print(f"You earned {ryo_gain} Ryo!")
+                            if random.randint(1, 100) <= 30:
+                                print("You found a Healing potion!")
+                                add_item("potion", potion_gain)
+                                
                             while player["xp"] >= 500:
                                 player["level"] += 1
                                 player["xp"] -= 500  #stores the remaining xp after levelling up
                                 print("\n--==Level Up==--")
                                 print(f"You reached Level {player['level']} !!")
+                                
                             save_game()
                             break
                         # Update saved HP Level and xp after battle progress
@@ -116,9 +136,15 @@ while True:     # Main game exploration loop
                         save_game()
                         break
                     
-                        
             elif choice_search == "2":
+                print("\n--===Inventory===--")
+                if player["inventory"] == {}:
+                    print("Your Inventory Is Empty")
+                else:
+                    for item in player["inventory"]:
+                        print(f"{item}: x{player['inventory'][item]}")
+                
+            elif choice_search == "3":
                 break
     break #while searching if player exit search ,this 'break' end the whole game
 
-  
