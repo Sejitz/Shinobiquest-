@@ -4,7 +4,7 @@ import random
 print("====SHINOBI QUEST====\n1. New Game\n2. Load Game\n3. Exit") # Display the main menu
 
 # ===== CHARACTER CREATION =====
-def save_game():
+def save_game():# ===== SAVE GAME FUNCTION =====
     with open("save.json","w") as file:
         json.dump(player, file)
 def add_item(item, amount=1):
@@ -13,6 +13,7 @@ def add_item(item, amount=1):
     else:
         player["inventory"][item] = amount
     print(f"{amount}x {item} added to your Inventory.")
+
 while True:
     choice = input("Choose: ") # Get the player's menu choice
     if choice == '1': # Start a new game
@@ -33,6 +34,7 @@ while True:
             else:
                 print("Invalid Village input!")
         print("Village selected:", village)
+        
         # ===== SAVE SYSTEM =====
         # Create a dictionary containing player data
         player = {
@@ -40,16 +42,18 @@ while True:
             "village": village,
             "level": 1,
             "hp": 100,
+            "max_hp": 100,
             "chakra": 50,
             "xp" : 0,
             "ryo": 0,
             "bandit_defeated": 0,
             "boss_defeated": 0,
             "inventory": {}
-        }
-        save_game()  # Save player data to a JSON file            
-        # for item in player["inventory"]:
-        #     print(item, player['inventory'][item])
+        }        
+        print("\nWelcome to Shinobiquest! Heres your startup rewards for your exciting journey!")
+        add_item("potion", 5)
+        
+        save_game()  # Save player data to a JSON file                   
         break
         
     elif choice == '2':
@@ -141,9 +145,30 @@ while True:     # Main game exploration loop
                 if player["inventory"] == {}:
                     print("Your Inventory Is Empty")
                 else:
-                    for item in player["inventory"]:
+                    for item in player["inventory"]: # ===== DISPLAY INVENTORY ITEMS =====
                         print(f"{item}: x{player['inventory'][item]}")
-                
+                while True:
+                    print("\nUse item's 1st letter to choose.\nEg. [p] for 'Potion'")
+                    print("1. Exit Inventory\n")
+                    choice_inventory = input("Choose i: ").lower()
+                    if choice_inventory == "p":
+                        if player["inventory"]["potion"] <= 0:# Prevent potion use when inventory is empty
+                            print("You do not have any potion!")
+                            continue
+                        if player["hp"] >= player["max_hp"]:# Prevent potion use at full HP
+                            print("Your Hp is full!")
+                            continue
+                        player["hp"] += 60
+                        player["inventory"]["potion"] -= 1
+                        print("60 Hp has been healed!")
+                        print(f"Potion left {player['inventory']['potion']}")
+                        if player["hp"] > 100:
+                            player["hp"] = player["max_hp"]
+                        print(f"Current HP: {player['hp']}")
+                    elif choice_inventory == "1":
+                        break
+                        
+                    
             elif choice_search == "3":
                 break
     break #while searching if player exit search ,this 'break' end the whole game
