@@ -7,13 +7,15 @@ print("====SHINOBI QUEST====\n1. New Game\n2. Load Game\n3. Exit") # Display the
 def save_game():# ===== SAVE GAME FUNCTION =====
     with open("save.json","w") as file:
         json.dump(player, file)
+
+# ===== INVENTORY ITEM ADDER =====
 def add_item(item, amount=1):
     if item in player["inventory"]:
         player["inventory"][item] += amount
     else:
         player["inventory"][item] = amount
     print(f"{amount}x {item} added to your Inventory.")
-
+    save_game()
 while True:
     choice = input("Choose: ") # Get the player's menu choice
     if choice == '1': # Start a new game
@@ -69,6 +71,9 @@ while True:
             print(f"Bandit Defeated: {player['bandit_defeated']}")
             print(f"Boss Defeated: {player['boss_defeated']}")
             break
+    elif choice == '3':
+        print("Thanks for playing Shinobi Quest!")
+        exit()
         
         
     
@@ -82,7 +87,7 @@ while True:     # Main game exploration loop
         break
     elif choice_journey == "1":
         while True:     # Exploration menu
-            print("\n1. Search\n2. Inventory\n3. Exit")
+            print("\n1. Search\n2. Inventory\n3. Shop\n4. Exit")
             choice_search = input("Choose: ")
             
             if choice_search == "1":    # Start a random encounter
@@ -162,14 +167,37 @@ while True:     # Main game exploration loop
                         player["inventory"]["potion"] -= 1
                         print("60 Hp has been healed!")
                         print(f"Potion left {player['inventory']['potion']}")
-                        if player["hp"] > 100:
+                        if player["hp"] > player["max_hp"]:
                             player["hp"] = player["max_hp"]
                         print(f"Current HP: {player['hp']}")
+                        save_game()
                     elif choice_inventory == "1":
                         break
-                        
-                    
             elif choice_search == "3":
+                while True:
+                    print("\n--===Shop===--")
+                    print(f"Your Ryo: {player['ryo']}")
+                    print("1. Potion: 70")
+                    print("2. Kunai: 40")
+                    print("3. Exit Shop")
+                    choice_shop = input("Choose: ")
+                    if choice_shop == "1":
+                        if player["ryo"] >= 70:
+                            player["ryo"] -= 70
+                            add_item("potion", 1)
+                            print(f"Ryo left: {player['ryo']}")                       
+                        else:
+                            print("You do not have enough Ryo.")
+                    elif choice_shop == "2":
+                        if player["ryo"] >= 40:
+                            player["ryo"] -= 40
+                            add_item("kunai", 1)
+                            print(f"Ryo left: {player['ryo']}")                           
+                        else:
+                            print("You do not have enough Ryo.")
+                    elif choice_shop == "3":
+                        break
+            elif choice_search == "4":
                 break
     break #while searching if player exit search ,this 'break' end the whole game
 
