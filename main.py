@@ -16,6 +16,10 @@ def add_item(item, amount=1):
         player["inventory"][item] = amount
     print(f"{amount}x {item} added to your Inventory.")
     save_game()
+
+def deal_dmg(target_hp, dmg):
+    return max(0, target_hp - dmg)
+    
 while True:
     choice = input("Choose: ") # Get the player's menu choice
     if choice == '1': # Start a new game
@@ -53,7 +57,8 @@ while True:
             "inventory": {}
         }        
         print("\nWelcome to Shinobiquest! Heres your startup rewards for your exciting journey!")
-        add_item("potion", 5)
+        add_item("potion", 3)
+        add_item("kunai", 2)
         
         save_game()  # Save player data to a JSON file                   
         break
@@ -75,7 +80,7 @@ while True:
         print("Thanks for playing Shinobi Quest!")
         exit()
         
-        
+
     
 
     
@@ -98,52 +103,67 @@ while True:     # Main game exploration loop
                 print(f"\nA Bandit Appeared!\nYour Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
                     
                 while player["hp"] >0 and bandit_hp >0: # Battle loop continueswhile both fighters are alive
-                    print("\n1. Attack\n2. Run")
+                    print("\n1. Attack\n2. Kunai\n3. Run")
                     choice_attack = input("Choose: ")
                     if choice_attack == '1':
-                        bandit_hp = bandit_hp - 10
-                        player["hp"] -= 5
+                        bandit_hp = deal_dmg(bandit_hp, 10)
+                        #bandit_hp -= 10
+                        player["hp"] = deal_dmg(player["hp"], 5)
                         print("\nYou dealt 10 damage!")
                         print("Bandit dealt 5 damage!\n")
                         print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
-                        
-                        if player["hp"] <= 0:
-                            print("You were defeated!")
-                            save_game()
-                            break
-
-                        elif bandit_hp <= 0:
-                            print("\nYou defeated the Bandit!!")
-                            # ===== EXPERIENCE REWARD SYSTEM =====
-                            # Grant XP, Ryo reward for a successful battle
-                            xp_gain = random.randint(70, 111)
-                            player["xp"] += xp_gain
-                            ryo_gain = random.randint(30, 52)
-                            player["ryo"] += ryo_gain
-                            player["bandit_defeated"] += 1
-                            potion_gain = random.randint(1, 2)
+                    elif choice_attack == "2":
+                        if player["inventory"]["kunai"] > 0:
+                            player["inventory"]["kunai"] -= 1
+                            bandit_hp = deal_dmg(bandit_hp, 20)
+                            print("\nYou dealt 20 damage!")
+                            print("Bandit dealt 0 damage!\n")
+                            print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
+                        else:
+                            print("You do not have any kunai!")
+                            print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
                             
-                            # Display progression update
-                            print(f"You gained {xp_gain} XP!!")
-                            print(f"You earned {ryo_gain} Ryo!")
-                            if random.randint(1, 100) <= 30:
-                                print("You found a Healing potion!")
-                                add_item("potion", potion_gain)
-                                
-                            while player["xp"] >= 500:
-                                player["level"] += 1
-                                player["xp"] -= 500  #stores the remaining xp after levelling up
-                                print("\n--==Level Up==--")
-                                print(f"You reached Level {player['level']} !!")
-                                
-                            save_game()
-                            break
-                        # Update saved HP Level and xp after battle progress
+                    # elif choice_attack == "2" and player["inventory"]["kunai"] <= 0:
+                    #     print("You do not have any kunai!")
                             
-                    elif choice_attack == '2':
+                    elif choice_attack == '3':
                         print("You escaped the battle!")
                         save_game()
                         break
+                            
+                    if player["hp"] <= 0:
+                        print("You were defeated!")
+                        save_game()
+                        break
+
+                    elif bandit_hp <= 0:
+                        print("\nYou defeated the Bandit!!")
+                        # ===== EXPERIENCE REWARD SYSTEM =====
+                        # Grant XP, Ryo reward for a successful battle
+                        xp_gain = random.randint(70, 111)
+                        player["xp"] += xp_gain
+                        ryo_gain = random.randint(30, 52)
+                        player["ryo"] += ryo_gain
+                        player["bandit_defeated"] += 1
+                        potion_gain = random.randint(1, 2)
+                        
+                        # Display progression update
+                        print(f"You gained {xp_gain} XP!!")
+                        print(f"You earned {ryo_gain} Ryo!")
+                        if random.randint(1, 100) <= 30:
+                            print("\nYou found a Healing potion!")
+                            add_item("potion", potion_gain)
+                            
+                        while player["xp"] >= 500:
+                            player["level"] += 1
+                            player["xp"] -= 500  #stores the remaining xp after levelling up
+                            print("\n--==Level Up==--")
+                            print(f"You reached Level {player['level']} !!")
+                            
+                        save_game()
+                        break
+                        # Update saved HP Level and xp after battle progress
+                            
                     
             elif choice_search == "2":
                 print("\n--===Inventory===--")
@@ -174,7 +194,7 @@ while True:     # Main game exploration loop
                     elif choice_inventory == "1":
                         break
             elif choice_search == "3":
-                while True:
+                while True: #Logic for shop
                     print("\n--===Shop===--")
                     print(f"Your Ryo: {player['ryo']}")
                     print("1. Potion: 70")
