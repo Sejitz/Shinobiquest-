@@ -19,6 +19,125 @@ def add_item(item, amount=1):
 
 def deal_dmg(target_hp, dmg):
     return max(0, target_hp - dmg)
+
+def battle_reward():
+    xp_gain = random.randint(70, 111)
+    player["xp"] += xp_gain
+    ryo_gain = random.randint(30, 52)
+    player["ryo"] += ryo_gain
+    player["bandit_defeated"] += 1
+    potion_gain = random.randint(1, 2)
+    if random.randint(1, 100) <= 30:
+        print("\nYou found a Healing potion!")
+        add_item("potion", potion_gain)
+        
+    while player["xp"] >= 500:
+        player["level"] += 1
+        player["xp"] -= 500  #stores the remaining xp after levelling up
+        print("\n--==Level Up==--")
+        print(f"You reached Level {player['level']} !!")
+        
+    print(f"You gained {xp_gain} XP!!")
+    print(f"You earned {ryo_gain} Ryo!")
+    save_game()
+    
+def battle():
+    
+    bandit_hp = 50
+    print(f"\nA Bandit Appeared!\nYour Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
+        
+    while player["hp"] >0 and bandit_hp >0: # Battle loop continueswhile both fighters are alive
+        print("\n1. Attack\n2. Kunai\n3. Run")
+        choice_attack = input("Choose: ")
+        if choice_attack == '1':
+            bandit_hp = deal_dmg(bandit_hp, 10)
+            #bandit_hp -= 10
+            player["hp"] = deal_dmg(player["hp"], 5)
+            print("\nYou dealt 10 damage!")
+            print("Bandit dealt 5 damage!\n")
+            print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
+        elif choice_attack == "2":
+            if player["inventory"]["kunai"] > 0:
+                player["inventory"]["kunai"] -= 1
+                bandit_hp = deal_dmg(bandit_hp, 20)
+                print("\nYou dealt 20 damage!")
+                print("Bandit dealt 0 damage!\n")
+                print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
+            else:
+                print("You do not have any kunai!")
+                print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
+                
+        elif choice_attack == '3':
+            print("You escaped the battle!")
+            save_game()
+            break
+                
+        if player["hp"] <= 0:
+            print("You were defeated!")
+            save_game()
+            break
+
+        elif bandit_hp <= 0:
+            print("\nYou defeated the Bandit!!")
+            battle_reward()
+            
+            
+
+def inventory():
+    
+    print("\n--===Inventory===--")
+    if player["inventory"] == {}:
+        print("Your Inventory Is Empty")
+    else:
+        for item in player["inventory"]: # ===== DISPLAY INVENTORY ITEMS =====
+            print(f"{item}: x{player['inventory'][item]}")
+    while True:
+        print("\nUse item's 1st letter to choose.\nEg. [p] for 'Potion'")
+        print("1. Exit Inventory\n")
+        choice_inventory = input("Choose i: ").lower()
+        if choice_inventory == "p":
+            if player["inventory"]["potion"] <= 0:# Prevent potion use when inventory is empty
+                print("You do not have any potion!")
+                continue
+            if player["hp"] >= player["max_hp"]:# Prevent potion use at full HP
+                print("Your Hp is full!")
+                continue
+            player["hp"] += 60
+            player["inventory"]["potion"] -= 1
+            print("60 Hp has been healed!")
+            print(f"Potion left {player['inventory']['potion']}")
+            if player["hp"] > player["max_hp"]:
+                player["hp"] = player["max_hp"]
+            print(f"Current HP: {player['hp']}")
+            save_game()
+        elif choice_inventory == "1":
+            break
+
+def shop():
+
+    while True: #Logic for shop
+        print("\n--===Shop===--")
+        print(f"Your Ryo: {player['ryo']}")
+        print("1. Potion: 70")
+        print("2. Kunai: 40")
+        print("3. Exit Shop")
+        choice_shop = input("Choose: ")
+        if choice_shop == "1":
+            if player["ryo"] >= 70:
+                player["ryo"] -= 70
+                add_item("potion", 1)
+                print(f"Ryo left: {player['ryo']}")                       
+            else:
+                print("You do not have enough Ryo.")
+        elif choice_shop == "2":
+            if player["ryo"] >= 40:
+                player["ryo"] -= 40
+                add_item("kunai", 1)
+                print(f"Ryo left: {player['ryo']}")                           
+            else:
+                print("You do not have enough Ryo.")
+        elif choice_shop == "3":
+            break
     
 while True:
     choice = input("Choose: ") # Get the player's menu choice
@@ -99,124 +218,14 @@ while True:     # Main game exploration loop
                 if player["hp"] <= 0:
                     print("You can't fight anymore Your hp is 0!\nPlease recover health to continue fight.")
                     continue
-                bandit_hp = 50
-                print(f"\nA Bandit Appeared!\nYour Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
-                    
-                while player["hp"] >0 and bandit_hp >0: # Battle loop continueswhile both fighters are alive
-                    print("\n1. Attack\n2. Kunai\n3. Run")
-                    choice_attack = input("Choose: ")
-                    if choice_attack == '1':
-                        bandit_hp = deal_dmg(bandit_hp, 10)
-                        #bandit_hp -= 10
-                        player["hp"] = deal_dmg(player["hp"], 5)
-                        print("\nYou dealt 10 damage!")
-                        print("Bandit dealt 5 damage!\n")
-                        print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
-                    elif choice_attack == "2":
-                        if player["inventory"]["kunai"] > 0:
-                            player["inventory"]["kunai"] -= 1
-                            bandit_hp = deal_dmg(bandit_hp, 20)
-                            print("\nYou dealt 20 damage!")
-                            print("Bandit dealt 0 damage!\n")
-                            print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
-                        else:
-                            print("You do not have any kunai!")
-                            print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
-                            
-                    # elif choice_attack == "2" and player["inventory"]["kunai"] <= 0:
-                    #     print("You do not have any kunai!")
-                            
-                    elif choice_attack == '3':
-                        print("You escaped the battle!")
-                        save_game()
-                        break
-                            
-                    if player["hp"] <= 0:
-                        print("You were defeated!")
-                        save_game()
-                        break
+                battle()
 
-                    elif bandit_hp <= 0:
-                        print("\nYou defeated the Bandit!!")
-                        # ===== EXPERIENCE REWARD SYSTEM =====
-                        # Grant XP, Ryo reward for a successful battle
-                        xp_gain = random.randint(70, 111)
-                        player["xp"] += xp_gain
-                        ryo_gain = random.randint(30, 52)
-                        player["ryo"] += ryo_gain
-                        player["bandit_defeated"] += 1
-                        potion_gain = random.randint(1, 2)
-                        
-                        # Display progression update
-                        print(f"You gained {xp_gain} XP!!")
-                        print(f"You earned {ryo_gain} Ryo!")
-                        if random.randint(1, 100) <= 30:
-                            print("\nYou found a Healing potion!")
-                            add_item("potion", potion_gain)
-                            
-                        while player["xp"] >= 500:
-                            player["level"] += 1
-                            player["xp"] -= 500  #stores the remaining xp after levelling up
-                            print("\n--==Level Up==--")
-                            print(f"You reached Level {player['level']} !!")
-                            
-                        save_game()
-                        break
-                        # Update saved HP Level and xp after battle progress
-                            
-                    
             elif choice_search == "2":
-                print("\n--===Inventory===--")
-                if player["inventory"] == {}:
-                    print("Your Inventory Is Empty")
-                else:
-                    for item in player["inventory"]: # ===== DISPLAY INVENTORY ITEMS =====
-                        print(f"{item}: x{player['inventory'][item]}")
-                while True:
-                    print("\nUse item's 1st letter to choose.\nEg. [p] for 'Potion'")
-                    print("1. Exit Inventory\n")
-                    choice_inventory = input("Choose i: ").lower()
-                    if choice_inventory == "p":
-                        if player["inventory"]["potion"] <= 0:# Prevent potion use when inventory is empty
-                            print("You do not have any potion!")
-                            continue
-                        if player["hp"] >= player["max_hp"]:# Prevent potion use at full HP
-                            print("Your Hp is full!")
-                            continue
-                        player["hp"] += 60
-                        player["inventory"]["potion"] -= 1
-                        print("60 Hp has been healed!")
-                        print(f"Potion left {player['inventory']['potion']}")
-                        if player["hp"] > player["max_hp"]:
-                            player["hp"] = player["max_hp"]
-                        print(f"Current HP: {player['hp']}")
-                        save_game()
-                    elif choice_inventory == "1":
-                        break
+                inventory()
+            
             elif choice_search == "3":
-                while True: #Logic for shop
-                    print("\n--===Shop===--")
-                    print(f"Your Ryo: {player['ryo']}")
-                    print("1. Potion: 70")
-                    print("2. Kunai: 40")
-                    print("3. Exit Shop")
-                    choice_shop = input("Choose: ")
-                    if choice_shop == "1":
-                        if player["ryo"] >= 70:
-                            player["ryo"] -= 70
-                            add_item("potion", 1)
-                            print(f"Ryo left: {player['ryo']}")                       
-                        else:
-                            print("You do not have enough Ryo.")
-                    elif choice_shop == "2":
-                        if player["ryo"] >= 40:
-                            player["ryo"] -= 40
-                            add_item("kunai", 1)
-                            print(f"Ryo left: {player['ryo']}")                           
-                        else:
-                            print("You do not have enough Ryo.")
-                    elif choice_shop == "3":
-                        break
+                shop()
+
             elif choice_search == "4":
                 break
     break #while searching if player exit search ,this 'break' end the whole game
