@@ -1,6 +1,30 @@
 import json # Import JSON module for saving game data
 import random
 
+opponent = [
+    {
+        "name": "Bandit",
+        "hp": 50,
+        "damage": random.randint(5, 7),
+        "xp": random.randint(70, 111),
+        "ryo": random.randint(30, 52)
+    },
+    {
+        "name": "Rogue Ninja",
+        "hp": 80,
+        "damage": random.randint(8, 15),
+        "xp": random.randint(120, 180),
+        "ryo": random.randint(60, 150)
+    },
+    {
+        "name": "Wolf",
+        "hp": 35,
+        "damage": random.randint(3, 6),
+        "xp": random.randint(40, 60),
+        "ryo": random.randint(15, 26)
+    }
+]
+
 print("====SHINOBI QUEST====\n1. New Game\n2. Load Game\n3. Exit") # Display the main menu
 
 # ===== CHARACTER CREATION =====
@@ -25,7 +49,7 @@ def battle_reward():
     player["xp"] += xp_gain
     ryo_gain = random.randint(30, 52)
     player["ryo"] += ryo_gain
-    player["bandit_defeated"] += 1
+    player["enemy_defeated"] += 1
     potion_gain = random.randint(1, 2)
     if random.randint(1, 100) <= 30:
         print("\nYou found a Healing potion!")
@@ -42,46 +66,58 @@ def battle_reward():
     save_game()
     
 def battle():
-    
-    bandit_hp = 50
-    print(f"\nA Bandit Appeared!\nYour Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
+
+    enemy = random.choice(opponent)
+    enemy_name = enemy["name"]
+    enemy_hp = enemy["hp"]
+    enemy_dmg = enemy["damage"]
+    enemy_xp = enemy["xp"]
+    enemy_ryo = enemy["ryo"]
+    def result():
+        if player["hp"] <= 0:
+            print("You were defeated!")
+            save_game()          
+        elif enemy_hp <= 0:
+            print(f"\nYou defeated the {enemy_name}!!")
+            player["enemy_defeated"] += 1
+            battle_reward()
+    print(f"\nA {enemy['name']} Appeared!\nYour Hp: {player['hp']}\n{enemy_name} Hp: {enemy_hp}")
         
-    while player["hp"] >0 and bandit_hp >0: # Battle loop continueswhile both fighters are alive
+    while player["hp"] >0 and enemy_hp >0: # Battle loop continueswhile both fighters are alive
         print("\n1. Attack\n2. Kunai\n3. Run")
         choice_attack = input("Choose: ")
         if choice_attack == '1':
-            bandit_hp = deal_dmg(bandit_hp, 10)
-            #bandit_hp -= 10
-            player["hp"] = deal_dmg(player["hp"], 5)
-            print("\nYou dealt 10 damage!")
-            print("Bandit dealt 5 damage!\n")
-            print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
+            if random.randint(1, 100) <= 40:
+                enemy_hp = deal_dmg(enemy_hp, 25)
+                player["hp"] = deal_dmg(player["hp"], enemy_dmg)
+                print("\nCritical Hit!!")
+                print(f"\nYou dealt 25 damage!")
+                print(f"{enemy_name} dealt {enemy_dmg} damage!\n")
+                print(f"Your Hp: {player['hp']}\n{enemy_name} Hp: {enemy_hp}")
+                result()
+                continue
+                
+            enemy_hp = deal_dmg(enemy_hp, 10)
+            player["hp"] = deal_dmg(player["hp"], enemy_dmg)
+            print(f"\nYou dealt 10 damage!")
+            print(f"{enemy_name} dealt {enemy_dmg} damage!\n")
+            print(f"Your Hp: {player['hp']}\n{enemy_name} Hp: {enemy_hp}")
+            result()
         elif choice_attack == "2":
             if player["inventory"]["kunai"] > 0:
                 player["inventory"]["kunai"] -= 1
-                bandit_hp = deal_dmg(bandit_hp, 20)
+                enemy_hp = deal_dmg(enemy_hp, 20)
                 print("\nYou dealt 20 damage!")
-                print("Bandit dealt 0 damage!\n")
-                print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
+                print(f"{enemy_name} dealt {enemy_dmg} damage!\n")
+                print(f"Your Hp: {player['hp']}\n{enemy_name} Hp: {enemy_hp}")
             else:
                 print("You do not have any kunai!")
-                print(f"Your Hp: {player['hp']}\nBandit Hp: {bandit_hp}")
-                
+                print(f"Your Hp: {player['hp']}\nBandit Hp: {enemy_hp}")
+            result()
         elif choice_attack == '3':
             print("You escaped the battle!")
             save_game()
             break
-                
-        if player["hp"] <= 0:
-            print("You were defeated!")
-            save_game()
-            break
-
-        elif bandit_hp <= 0:
-            print("\nYou defeated the Bandit!!")
-            battle_reward()
-            
-            
 
 def inventory():
     
@@ -171,7 +207,7 @@ while True:
             "chakra": 50,
             "xp" : 0,
             "ryo": 0,
-            "bandit_defeated": 0,
+            "enemy_defeated": 0,
             "boss_defeated": 0,
             "inventory": {}
         }        
