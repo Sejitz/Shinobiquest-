@@ -5,23 +5,23 @@ opponent = [
     {
         "name": "Bandit",
         "hp": 50,
-        "damage": random.randint(5, 7),
-        "xp": random.randint(70, 111),
-        "ryo": random.randint(30, 52)
+        "damage": (5, 7),
+        "xp": (70, 111),
+        "ryo": (30, 52)
     },
     {
         "name": "Rogue Ninja",
         "hp": 80,
-        "damage": random.randint(8, 15),
-        "xp": random.randint(120, 180),
-        "ryo": random.randint(60, 150)
+        "damage": (8, 15),
+        "xp": (120, 180),
+        "ryo": (60, 150)
     },
     {
         "name": "Wolf",
         "hp": 35,
-        "damage": random.randint(3, 6),
-        "xp": random.randint(40, 60),
-        "ryo": random.randint(15, 26)
+        "damage": (3, 6),
+        "xp": (40, 60),
+        "ryo": (15, 26)
     }
 ]
 
@@ -44,35 +44,41 @@ def add_item(item, amount=1):
 def deal_dmg(target_hp, dmg):
     return max(0, target_hp - dmg)
 
-def battle_reward():
-    xp_gain = random.randint(70, 111)
-    player["xp"] += xp_gain
-    ryo_gain = random.randint(30, 52)
-    player["ryo"] += ryo_gain
-    player["enemy_defeated"] += 1
-    potion_gain = random.randint(1, 2)
-    if random.randint(1, 100) <= 30:
-        print("\nYou found a Healing potion!")
-        add_item("potion", potion_gain)
-        
-    while player["xp"] >= 500:
-        player["level"] += 1
-        player["xp"] -= 500  #stores the remaining xp after levelling up
-        print("\n--==Level Up==--")
-        print(f"You reached Level {player['level']} !!")
-        
-    print(f"You gained {xp_gain} XP!!")
-    print(f"You earned {ryo_gain} Ryo!")
-    save_game()
     
 def battle():
 
     enemy = random.choice(opponent)
     enemy_name = enemy["name"]
     enemy_hp = enemy["hp"]
-    enemy_dmg = enemy["damage"]
-    enemy_xp = enemy["xp"]
-    enemy_ryo = enemy["ryo"]
+    
+    enemy_xp = random.randint(enemy["xp"][0], enemy["xp"][1])
+    enemy_ryo = random.randint(enemy["ryo"][0], enemy["ryo"][1])
+    def battle_reward():
+        xp_gain = enemy_xp
+        player["xp"] += xp_gain
+        ryo_gain = enemy_ryo
+        player["ryo"] += ryo_gain
+        #player["enemy_defeated"] += 1
+        potion_gain = random.randint(1, 2)
+        if random.randint(1, 100) <= 30:
+            print("\nYou found a Healing potion!")
+            add_item("potion", potion_gain)
+            
+        while player["xp"] >= 500:
+            player["level"] += 1
+            player["xp"] -= 500  #stores the remaining xp after levelling up
+            print("\n--==Level Up==--")
+            print(f"You reached Level {player['level']} !!")
+            
+        print(f"You gained {xp_gain} XP!!")
+        print(f"You earned {ryo_gain} Ryo!")
+        save_game()
+    # def enemyai():
+    #     chance = random.randint(1, 100)
+    #     if chance <= 25:
+    #         print(f"{enemy_name} dealt {enemy_dmg} damage!\n")
+    #         print(f"Your Hp: {player['hp']}\n{enemy_name} Hp: {enemy_hp}")
+    #     elif chance > 25 and chance <= 50:
     def result():
         if player["hp"] <= 0:
             print("You were defeated!")
@@ -87,17 +93,19 @@ def battle():
         print("\n1. Attack\n2. Kunai\n3. Run")
         choice_attack = input("Choose: ")
         if choice_attack == '1':
-            if random.randint(1, 100) <= 40:
+            if random.randint(1, 100) <= 15:
                 enemy_hp = deal_dmg(enemy_hp, 25)
+                enemy_dmg = random.randint(enemy["damage"][0], enemy["damage"][1])
                 player["hp"] = deal_dmg(player["hp"], enemy_dmg)
                 print("\nCritical Hit!!")
                 print(f"\nYou dealt 25 damage!")
-                print(f"{enemy_name} dealt {enemy_dmg} damage!\n")
                 print(f"Your Hp: {player['hp']}\n{enemy_name} Hp: {enemy_hp}")
+                #====
                 result()
                 continue
                 
             enemy_hp = deal_dmg(enemy_hp, 10)
+            enemy_dmg = random.randint(enemy["damage"][0], enemy["damage"][1])
             player["hp"] = deal_dmg(player["hp"], enemy_dmg)
             print(f"\nYou dealt 10 damage!")
             print(f"{enemy_name} dealt {enemy_dmg} damage!\n")
@@ -228,16 +236,13 @@ while True:
             print(f"Chakra: {player['chakra']}")
             print(f"XP: {player['xp']}")
             print(f"Ryo: {player['ryo']}")
-            print(f"Bandit Defeated: {player['bandit_defeated']}")
+            print(f"Enemy Defeated: {player['enemy_defeated']}")
             print(f"Boss Defeated: {player['boss_defeated']}")
             break
     elif choice == '3':
         print("Thanks for playing Shinobi Quest!")
         exit()
         
-
-    
-
     
 # ===== BATTLE SYSTEM =====
 print("\nYou are Good to go, Start/Continue the Journey?\n1. Yes\n2. No")
