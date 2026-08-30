@@ -172,17 +172,10 @@ def battle(player):
             kunai_count = player["inventory"].get("kunai", 0)
             if kunai_count > 0:
                 player["inventory"]["kunai"] -= 1
-                enemy_hp = deal_dmg(enemy_hp, 20)
-
-                # enemy retaliates
-                enemy_dmg = random.randint(
-                    enemy["damage"][0],
-                    enemy["damage"][1]
+                enemy_hp = deal_dmg(enemy_hp, 20
                 )
-                player["hp"] = deal_dmg(player["hp"], enemy_dmg)
-
+                
                 print("\nYou dealt 20 damage!")
-                print(f"{enemy_name} dealt {enemy_dmg} damage!\n")
                 print(
                     f"Your Hp: {player['hp']}"
                     f"\n{enemy_name} Hp: {enemy_hp}"
