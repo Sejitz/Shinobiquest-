@@ -169,30 +169,31 @@ def battle(player):
             result()
 
         elif choice_attack == "2":
-            if player["inventory"]["kunai"] > 0:
-                
+            kunai_count = player["inventory"].get("kunai", 0)
+            if kunai_count > 0:
                 player["inventory"]["kunai"] -= 1
-                enemy_hp = deal_dmg(
-                    enemy_hp,
-                    20
+                enemy_hp = deal_dmg(enemy_hp, 20)
+
+                # enemy retaliates
+                enemy_dmg = random.randint(
+                    enemy["damage"][0],
+                    enemy["damage"][1]
                 )
+                player["hp"] = deal_dmg(player["hp"], enemy_dmg)
+
                 print("\nYou dealt 20 damage!")
-                print(
-                    f"{enemy_name} dealt "
-                    f"{enemy_dmg} damage!\n"
-                )
+                print(f"{enemy_name} dealt {enemy_dmg} damage!\n")
                 print(
                     f"Your Hp: {player['hp']}"
                     f"\n{enemy_name} Hp: {enemy_hp}"
                 )
 
+                save_game(player)
             else:
-                print(
-                    "You do not have any kunai!"
-                )
+                print("You do not have any kunai!")
                 print(
                     f"Your Hp: {player['hp']}"
-                    f"\nBandit Hp: {enemy_hp}"
+                    f"\n{enemy_name} Hp: {enemy_hp}"
                 )
             result()
 
