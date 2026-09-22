@@ -4,6 +4,8 @@ from systems.shop import shop
 from systems.battle import battle
 
 
+#=========================================================
+
 print(
     "====SHINOBI QUEST===="
     "\n1. New Game"
