@@ -18,7 +18,7 @@ from systems.shop import shop
 from systems.battle import battle
 
 from UI.interface import battle_ui, choice_ui, draw_menu, get_player_name, interface_ui, inventory_ui, main_ui, shop_ui, village_ui  
-
+from data.variables import screen, potion_amount, kunai_amount, balance
 console = Console()
 
 
@@ -42,8 +42,8 @@ try:
 
 
         screen = "main"
-        potion_amount = 4
-        kunai_amount = 7
+        potion_amount = 0
+        kunai_amount = 0
         balance = 0
 
         while True:

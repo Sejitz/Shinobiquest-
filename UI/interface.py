@@ -13,7 +13,9 @@ from rich.live import Live
 from UI.menu import menu, draw_menu
 from UI.name import get_player_name
 from systems.save_system import save_game, load_game, temp
-
+# from main import potion_amount, kunai_amount
+from data.variables import screen, potion_amount, kunai_amount, balance
+from systems.inventory import add_item
 console = Console()
 
 
@@ -58,10 +60,11 @@ def choice_ui(live):
     )
 
     layout["story"].update(
-        Panel(
-            "Welcome to Shinobiquest! \n"
-            "Here's your startup rewards"
-            "for your exciting journey!"
+        Panel(Group(
+            "Welcome to Shinobiquest! \n Here's your startup rewards for your exciting journey!\n",
+            f"3x added to your Inventory",
+            f"2x added to your Inventory"    
+            )
         )
     )
 
@@ -92,10 +95,10 @@ def interface_ui(live):
     return menu(options, live)
 
 #Inventory Ui ---------------------------------------------------
-def inventory_ui(live, potion_quantity=0, kunai_quantity=0):
+def inventory_ui(live, potion_amount, kunai_amount):
     options = [
-        f"Potions: {potion_quantity}",
-        f"Kunai: {kunai_quantity}\n",
+        f"Potions: {potion_amount}",
+        f"Kunai: {kunai_amount}\n",
         "Back"
     ]
 
@@ -222,6 +225,7 @@ def battle_ui(live, player, enemy_name, enemy_hp, enemy_max):
         f"Name: {enemy_name}",
         enemy_bar
     )
+    
 
     layout["player"].update(
         Panel(

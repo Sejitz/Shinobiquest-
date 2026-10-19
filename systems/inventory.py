@@ -7,7 +7,7 @@ def add_item(player, item, amount=1):
     else:
         player["inventory"][item] = amount
 
-    print(f"{amount}x {item} added to your Inventory.")
+    # print(f"{amount}x {item} added to your Inventory.")
     save_game(player)
 
 
