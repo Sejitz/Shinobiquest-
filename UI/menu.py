@@ -1,31 +1,30 @@
 import sys
 from rich.panel import Panel
 
-def menu(option, layout):
-        position = 0
-            
-    #choice = menu()
-        
-        while True:
-            #print("\x1b[2J\x1b[H")
-            
-                
-            key = sys.stdin.read(1)
-            
-            if key == 'q':
-                break
-            if key == '\x1b':
-                key += sys.stdin.read(2)
-                if key == '\x1b[A':
-                    position = max(0, position - 1)
 
-                elif key == '\x1b[B':
-                    position = min(len(option) - 1, position + 1)
-                layout["menue"].update(
-                    draw_menu(option, position)
-                )
-            if key == '\n':
-                return option[position]
+def menu(options, live, target=None):
+    position = 0
+
+    while True:
+        key = sys.stdin.read(1)
+
+        if key == 'q':
+            break
+
+        if key == '\x1b':
+            key += sys.stdin.read(2)
+            if key == '\x1b[A':
+                position = max(0, position - 1)
+            elif key == '\x1b[B':
+                position = min(len(options) - 1, position + 1)
+
+            updater = target if target is not None else live
+            updater.update(draw_menu(options, position))
+            live.refresh()
+
+        if key in ('\n', '\r'):
+            return options[position]
+
 
 def draw_menu(options, position):
     menu_text = ""

@@ -7,7 +7,7 @@ from systems.inventory import add_item
 from systems.save_system import temp
 
 
-def battle(player):
+def battle(player, action_ui):
     enemy = random.choice(opponent)
 
     enemy_name = enemy["name"]
@@ -83,12 +83,14 @@ def battle(player):
     )
 
     while player["hp"] > 0 and enemy_hp > 0:
-        print("\n1. Attack\n2. Kunai\n3. Run")
-        choice_attack = input("Choose: ")
-        if choice_attack == "showstats":
-            temp()
+        choice_attack = action_ui(
+            player,
+            enemy_name,
+            enemy_hp,
+            enemy_max
+        )
 
-        if choice_attack == "1":
+        if choice_attack == "Attack":
             # Enemy AI
             ai_react = random.randint(1, 100)
             if ai_react <= 25:
@@ -168,7 +170,7 @@ def battle(player):
             )
             result()
 
-        elif choice_attack == "2":
+        elif choice_attack == "Kunai":
             kunai_count = player["inventory"].get("kunai", 0)
             if kunai_count > 0:
                 player["inventory"]["kunai"] -= 1
@@ -190,7 +192,7 @@ def battle(player):
                 )
             result()
 
-        elif choice_attack == "3":
+        elif choice_attack == "Run":
             print("You escaped the battle!")
             save_game(player)
             break

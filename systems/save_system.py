@@ -1,13 +1,18 @@
 import json
+from pathlib import Path
+
+SAVE_FILE = Path(__file__).resolve().parent.parent / "save.json"
 
 
 def save_game(player):
-    with open("save.json", "w") as file:
-        json.dump(player, file)
+    with open(SAVE_FILE, "w") as file:
+        json.dump(player, file, indent=4)
+
 
 def load_game():
-    with open("save.json", "r") as file:
+    with open(SAVE_FILE, "r") as file:
         return json.load(file)
+
 
 def temp():
     player = load_game()
