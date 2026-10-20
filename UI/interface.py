@@ -16,6 +16,7 @@ from systems.save_system import save_game, load_game, temp
 # from main import potion_amount, kunai_amount
 from data.variables import screen, potion_amount, kunai_amount, balance
 from systems.inventory import add_item
+from systems.battle import battle_log
 console = Console()
 
 
@@ -147,7 +148,7 @@ def shop_ui(live, balance):
 
     
 #Battle Ui ---------------------------------------------------
-def battle_ui(live, player, enemy_name, enemy_hp, enemy_max):
+def battle_ui(live, player, enemy_name, enemy_hp, enemy_max, battle_log):
 
     options = [
         "Attack",
@@ -199,6 +200,15 @@ def battle_ui(live, player, enemy_name, enemy_hp, enemy_max):
 
     layout = Layout()
 
+    def update_log():
+    layout["log"].update(
+        Panel(
+            "\n".join(battle_log[-6:]) or "Battle begins...",
+            title="Battle Log"
+        )
+    )
+    live.refresh()
+
     layout.split_column(
         Layout(name="info", ratio=3),
         Layout(name="log", ratio=2),
@@ -247,7 +257,7 @@ def battle_ui(live, player, enemy_name, enemy_hp, enemy_max):
 
     layout["log"].update(
         Panel(
-            "Choose your action...",
+            "\n".join(battle_log) or "Battle begins...",
             title="Battle Log"
         )
     )
@@ -273,11 +283,12 @@ def battle_ui(live, player, enemy_name, enemy_hp, enemy_max):
     # GET PLAYER CHOICE
     # -----------------------------------------------------
 
-    return menu(
+    action = menu(
         options,
         live,
         target=layout["battleui"]
     )
+    return action, update_log
 
 
 # =========================================================
