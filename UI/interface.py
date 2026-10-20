@@ -16,7 +16,7 @@ from systems.save_system import save_game, load_game, temp
 # from main import potion_amount, kunai_amount
 from data.variables import screen, potion_amount, kunai_amount, balance
 from systems.inventory import add_item
-from systems.battle import battle_log
+from systems.battle import battle_log, MAX_BATTLE_LOG_ENTRIES
 console = Console()
 
 
@@ -201,13 +201,13 @@ def battle_ui(live, player, enemy_name, enemy_hp, enemy_max, battle_log):
     layout = Layout()
 
     def update_log():
-    layout["log"].update(
-        Panel(
-            "\n".join(battle_log[-6:]) or "Battle begins...",
-            title="Battle Log"
+        layout["log"].update(
+            Panel(
+                "\n".join(battle_log[-MAX_BATTLE_LOG_ENTRIES:]) or "Battle begins...",
+                title="Battle Log"
+            )
         )
-    )
-    live.refresh()
+        live.refresh()
 
     layout.split_column(
         Layout(name="info", ratio=3),
@@ -257,7 +257,7 @@ def battle_ui(live, player, enemy_name, enemy_hp, enemy_max, battle_log):
 
     layout["log"].update(
         Panel(
-            "\n".join(battle_log) or "Battle begins...",
+            "\n".join(battle_log[-MAX_BATTLE_LOG_ENTRIES:]) or "Battle begins...",
             title="Battle Log"
         )
     )
