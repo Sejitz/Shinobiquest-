@@ -10,7 +10,7 @@ MAX_BATTLE_LOG_ENTRIES = 6
 battle_log = []
 
 def _append_battle_log(message):
-    battle_log.append(message)
+    battle_log.append(message.strip())
     del battle_log[:-MAX_BATTLE_LOG_ENTRIES]
 
 def battle(player, action_ui, log_ui):
