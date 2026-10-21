@@ -2,15 +2,15 @@
     "name": "",
     "village": "Leaf",
     "level": 1,
-    "hp": 25,
+    "hp": 49,
     "max_hp": 100,
     "chakra": 50,
-    "xp": 136,
-    "ryo": 137,
-    "enemy_defeated": 1,
+    "xp": 131,
+    "ryo": 63,
+    "enemy_defeated": 2,
     "boss_defeated": 0,
     "inventory": {
         "potion": 3,
-        "kunai": 1
+        "kunai": 2
     }
 }
