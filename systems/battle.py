@@ -17,7 +17,7 @@ def battle(player, action_ui, log_ui):
     battle_log.clear()
 
     def append_battle_log(message):
-        append_battle_log(message)
+        _append_battle_log(message)
         log_ui()
     enemy = random.choice(opponent)
 
