@@ -23,6 +23,22 @@ from data.variables import screen, potion_amount, kunai_amount, balance
 console = Console()
 
 
+def create_battle_callbacks(live):
+    log_refresh = [lambda: None]
+
+    def action_ui(player, enemy_name, enemy_hp, enemy_max, battle_log):
+        action, update_log = battle_ui(
+            live, player, enemy_name, enemy_hp, enemy_max, battle_log
+        )
+        log_refresh[0] = update_log
+        return action
+
+    def log_ui():
+        log_refresh[0]()
+
+    return action_ui, log_ui
+
+
 old_settings = termios.tcgetattr(sys.stdin)
 
 try:
@@ -102,11 +118,8 @@ try:
                     if player["hp"] <= 0:
                         console.print("[red]Your HP is zero! Recover first.[/red]")
                     else:
-                        battle(
-                            player,
-                            lambda p, name, hp, maximum:
-                                battle_ui(live, p, name, hp, maximum)
-                        )
+                        action_ui, log_ui = create_battle_callbacks(live)
+                        battle(player, action_ui, log_ui)
             
                     screen = "interface"
             
