@@ -138,6 +138,7 @@ Compatibility may vary depending on terminal capabilities.
 Check the Releases page for published versions and downloadable assets.
 
 **[⬇️ Download Shinobi Quest](https://github.com/Sejitz/Shinobiquest-/releases)**
+*For now there aint any releases
 
 ## 🤝 Contributing
 
