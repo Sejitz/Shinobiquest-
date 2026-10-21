@@ -15,6 +15,10 @@ def _append_battle_log(message):
 
 def battle(player, action_ui, log_ui):
     battle_log.clear()
+
+    def append_battle_log(message):
+        _append_battle_log(message)
+        log_ui()
     enemy = random.choice(opponent)
 
     enemy_name = enemy["name"]
@@ -39,7 +43,7 @@ def battle(player, action_ui, log_ui):
                 enemy_hp + heal_amt,
                 enemy_max
             )
-            _append_battle_log(f"{enemy_name} healed {heal_amt} HP")
+            append_battle_log(f"{enemy_name} healed {heal_amt} HP")
             
 
     def battle_reward():
@@ -53,7 +57,7 @@ def battle(player, action_ui, log_ui):
         potion_gain = random.randint(1, 2)
 
         if random.randint(1, 100) <= 7:
-            _append_battle_log("\nYou found a Healing potion!")
+            append_battle_log("\nYou found a Healing potion!")
             add_item(
                 player,
                 "potion",
@@ -63,28 +67,28 @@ def battle(player, action_ui, log_ui):
         while player["xp"] >= 500:
             player["level"] += 1
             player["xp"] -= 500
-            _append_battle_log("\n--==Level Up==--")
-            _append_battle_log(
+            append_battle_log("\n--==Level Up==--")
+            append_battle_log(
                 f"You reached Level "
                 f"{player['level']} !!"
             )
-        _append_battle_log(f"You gained {xp_gain} XP!!")
-        _append_battle_log(f"You earned {ryo_gain} Ryo!")
+        append_battle_log(f"You gained {xp_gain} XP!!")
+        append_battle_log(f"You earned {ryo_gain} Ryo!")
         save_game(player)
 
     def result():
         if player["hp"] <= 0:
-            _append_battle_log("You were defeated!")
+            append_battle_log("You were defeated!")
             save_game(player)
             
         elif enemy_hp <= 0:
-            _append_battle_log(
+            append_battle_log(
                 f"\nYou defeated the "
                 f"{enemy_name}!!"
             )
             player["enemy_defeated"] += 1
             battle_reward()
-    _append_battle_log(
+    append_battle_log(
         f"\nA {enemy['name']} Appeared!"
         # f"\nYour Hp: {player['hp']}"
         # f"\n{enemy_name} Hp: {enemy_hp}"
@@ -103,7 +107,7 @@ def battle(player, action_ui, log_ui):
             # Enemy AI
             ai_react = random.randint(1, 100)
             if ai_react <= 25:
-                _append_battle_log(
+                append_battle_log(
                     f"{enemy_name} Raises His guard."
                 )
                 enemy_hp = deal_dmg(
@@ -118,7 +122,7 @@ def battle(player, action_ui, log_ui):
                     player["hp"],
                     enemy_dmg
                 )
-                _append_battle_log("\nYou dealt 5 damage!")
+                append_battle_log("\nYou dealt 5 damage!")
                 #battle_log.append(
                 #    f"Your Hp: {player['hp']}"
                 #    f"\n{enemy_name} Hp: {enemy_hp}"
@@ -147,8 +151,8 @@ def battle(player, action_ui, log_ui):
                     player["hp"],
                     enemy_dmg
                 )
-                _append_battle_log("\nCritical Hit!!")
-                _append_battle_log("\nYou dealt 25 damage!")
+                append_battle_log("\nCritical Hit!!")
+                append_battle_log("\nYou dealt 25 damage!")
                 # battle_log.append(
                 #     f"Your Hp: {player['hp']}"
                 #     f"\n{enemy_name} Hp: {enemy_hp}"
@@ -168,8 +172,8 @@ def battle(player, action_ui, log_ui):
                 player["hp"],
                 enemy_dmg
             )
-            _append_battle_log("\nYou dealt 10 damage!")
-            _append_battle_log(
+            append_battle_log("\nYou dealt 10 damage!")
+            append_battle_log(
                 f"{enemy_name} dealt "
                 f"{enemy_dmg} damage!\n"
             )
@@ -186,7 +190,7 @@ def battle(player, action_ui, log_ui):
                 enemy_hp = deal_dmg(enemy_hp, 20
                 )
                 
-                _append_battle_log("\nYou dealt 20 damage!")
+                append_battle_log("\nYou dealt 20 damage!")
                 # battle_log.append(
                 #     f" Hp: {player['hp']}"
                 #     f"\n{enemy_name} Hp: {enemy_hp}"
@@ -194,7 +198,7 @@ def battle(player, action_ui, log_ui):
 
                 save_game(player)
             else:
-                _append_battle_log("You do not have any kunai!")
+                append_battle_log("You do not have any kunai!")
                 # battle_log.append(
                 #     f"Your Hp: {player['hp']}"
                 #     f"\n{enemy_name} Hp: {enemy_hp}"
@@ -202,6 +206,6 @@ def battle(player, action_ui, log_ui):
             result()
 
         elif choice_attack == "Run":
-            _append_battle_log("You escaped the battle!")
+            append_battle_log("You escaped the battle!")
             save_game(player)
             break
