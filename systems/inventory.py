@@ -18,6 +18,7 @@ def inventory(player):
         print("Your Inventory Is Empty")
     else:
         for item in player["inventory"]:
+            # important____f
             print(f"{item}: x{player['inventory'][item]}")
 
     while True:

@@ -14,7 +14,7 @@ from UI.menu import menu, draw_menu
 from UI.name import get_player_name
 from systems.save_system import save_game, load_game, temp
 # from main import potion_amount, kunai_amount
-from data.variables import screen, potion_amount, kunai_amount, balance
+from data.variables import screen, potion_amount, kunai_amount, balance, player
 from systems.inventory import add_item
 from systems.battle import battle_log, MAX_BATTLE_LOG_ENTRIES
 console = Console()
@@ -98,8 +98,8 @@ def interface_ui(live):
 #Inventory Ui ---------------------------------------------------
 def inventory_ui(live, potion_amount, kunai_amount):
     options = [
-        f"Potions: {potion_amount}",
-        f"Kunai: {kunai_amount}\n",
+        f"Potions: {player['inventory']['potion']}",
+        f"Kunai: {player['inventory']['kunai']}\n",
         "Back"
     ]
 
@@ -207,7 +207,7 @@ def battle_ui(live, player, enemy_name, enemy_hp, enemy_max, battle_log):
                 title="Battle Log"
             )
         )
-    live.update(layout, refresh=True)
+        live.refresh()
 
     layout.split_column(
         Layout(name="info", ratio=3),

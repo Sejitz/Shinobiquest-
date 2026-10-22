@@ -6,7 +6,8 @@ import interface
 # interface.interface_ui()
 # interface.battle_ui()
 # run_ui()
+import main
 
-print(dir(interface))
+print(dir(main))
 
 
