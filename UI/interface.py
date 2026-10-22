@@ -207,7 +207,7 @@ def battle_ui(live, player, enemy_name, enemy_hp, enemy_max, battle_log):
                 title="Battle Log"
             )
         )
-        live.refresh()
+    live.update(layout, refresh=True)
 
     layout.split_column(
         Layout(name="info", ratio=3),
