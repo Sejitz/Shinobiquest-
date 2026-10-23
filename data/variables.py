@@ -1,6 +1,8 @@
 
 screen = "main"
-balance = 0
+potion_price = 70
+kunai_price = 40
+balance = ""
 
 player = {
     "name": "",

@@ -12,11 +12,13 @@ from rich.live import Live
 
 from UI.menu import menu, draw_menu
 from UI.name import get_player_name
+
 from systems.save_system import save_game, load_game, temp
-# from main import potion_amount, kunai_amount
-from data.variables import screen, balance, player
 from systems.inventory import add_item
 from systems.battle import battle_log, MAX_BATTLE_LOG_ENTRIES
+
+from data.variables import screen, balance, player, potion_price, kunai_price
+
 console = Console()
 
 
@@ -124,8 +126,7 @@ def inventory_ui(live, potion, kunai):
     
 #Shop Ui ---------------------------------------------------
 def shop_ui(live, balance):
-    potion_price = 70
-    kunai_price = 40
+    
 
     options = [
         f"Potion: {potion_price}",
@@ -140,7 +141,7 @@ def shop_ui(live, balance):
     )
 
     layout["info"].update(
-        Panel(f"Balance: {balance}", title="[italic green]← Shop →[/italic green]")
+        Panel(f"Balance: {player["ryo"]}", title="[italic green]← Shop →[/italic green]")
     )
     layout["shop"].update(draw_menu(options, 0))
 

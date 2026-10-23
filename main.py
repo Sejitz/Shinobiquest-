@@ -14,11 +14,11 @@ from UI.name import get_player_name
 
 from systems.save_system import save_game, load_game, temp
 from systems.inventory import add_item, heal
-from systems.shop import shop
+from systems.shop import shop_potion, shop_kunai
 from systems.battle import battle
 
 from UI.interface import battle_ui, choice_ui, draw_menu, get_player_name, interface_ui, inventory_ui, main_ui, shop_ui, village_ui  
-from data.variables import screen, balance, player
+from data.variables import screen, balance, player, potion_price, kunai_price
 
 console = Console()
 
@@ -143,6 +143,10 @@ try:
                 choice = shop_ui(live, balance)
                 if choice == "Back":
                     screen = "interface"
+                elif choice == f"Potion: {potion_price}":
+                    shop_potion(player)
+                elif choice == f"Kunai: {kunai_price}":
+                    shop_kunai(player)
 finally:
 
         termios.tcsetattr(
