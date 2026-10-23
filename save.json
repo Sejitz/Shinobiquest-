@@ -1,16 +1,16 @@
 {
-    "name": "",
-    "village": "Leaf",
+    "name": "test final",
+    "village": "Rain",
     "level": 1,
-    "hp": 100,
+    "hp": 0,
     "max_hp": 100,
     "chakra": 50,
-    "xp": 0,
-    "ryo": 0,
-    "enemy_defeated": 0,
+    "xp": 242,
+    "ryo": 177,
+    "enemy_defeated": 3,
     "boss_defeated": 0,
     "inventory": {
-        "potion": 3,
-        "kunai": 2
+        "potion": 1,
+        "kunai": 0
     }
 }

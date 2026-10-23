@@ -1,7 +1,5 @@
 
 screen = "main"
-potion_amount = 0
-kunai_amount = 0
 balance = 0
 
 player = {
@@ -17,4 +15,9 @@ player = {
     "boss_defeated": 0,
     "inventory": {}
 }
+
 dict_inventory = player["inventory"]
+
+
+# potions = f"Potions: {player['inventory']['potion']}"
+# kunais = f"Kunai: {player['inventory']['kunai']}\n"

@@ -14,7 +14,7 @@ from UI.menu import menu, draw_menu
 from UI.name import get_player_name
 from systems.save_system import save_game, load_game, temp
 # from main import potion_amount, kunai_amount
-from data.variables import screen, potion_amount, kunai_amount, balance, player
+from data.variables import screen, balance, player
 from systems.inventory import add_item
 from systems.battle import battle_log, MAX_BATTLE_LOG_ENTRIES
 console = Console()
@@ -96,10 +96,13 @@ def interface_ui(live):
     return menu(options, live)
 
 #Inventory Ui ---------------------------------------------------
-def inventory_ui(live, potion_amount, kunai_amount):
+def inventory_ui(live, potion, kunai):
+    # potion_amount = f"Potion: {potion}"
+    # kunai_amount = f"Kunai: {kunai}"
+    
     options = [
-        f"Potions: {player['inventory']['potion']}",
-        f"Kunai: {player['inventory']['kunai']}\n",
+        f"Potion: {player['inventory']['potion']}",
+        f"Kunai: {player['inventory']['kunai']}",
         "Back"
     ]
 
@@ -291,92 +294,3 @@ def battle_ui(live, player, enemy_name, enemy_hp, enemy_max, battle_log):
     return action, update_log
 
 
-# =========================================================
-# GAME UI
-# =========================================================
-
-def run_ui():
-
-    old_settings = termios.tcgetattr(sys.stdin)
-
-    try:
-        tty.setcbreak(sys.stdin.fileno())
-
-        console.print(
-            Align.center(
-                "[bold cyan]→ Shinobi Quest ←[/bold cyan]"
-            )
-        )
-
-
-        with Live(
-            "",
-            console=console,
-            auto_refresh=False
-        ) as live:
-
-
-            screen = "main"
-            potion_amount = 4
-            kunai_amount = 7
-            balance = 0
-
-            while True:
-                if screen == "main":
-                    choice = main_ui(live)
-                    if choice == "New Game":
-                        screen = "village"
-                    elif choice == "Load Game":
-                        screen = "Load"
-                    elif choice == "Exit":
-                        break
-                        
-                elif screen == "village":
-                    name = get_player_name(live)
-                    village = village_ui(live)
-                    screen = "choice"
-                    
-                elif screen == "choice":
-                    choice = choice_ui(live)
-                    if choice == "No":
-                        screen = "main"
-                    elif choice == "Yes":
-                        screen = "interface"
-                        
-                elif screen == "interface":
-                    choice = interface_ui(live)
-                    if choice == "Search":
-                        screen = "battle"
-                    elif choice == "Inventory":
-                        screen = "inventory"
-                    elif choice == "Shop":
-                        screen = "shop"
-                    elif choice == "Back":
-                        screen = "main"
-                        
-                elif screen == "battle":
-                    choice = battle_ui(live)
-                    
-                elif screen == "inventory":
-                    choice = inventory_ui(live, potion_amount, kunai_amount)
-                    if choice == "Back":
-                        screen = "interface"
-
-                elif screen == "shop":
-                    choice = shop_ui(live, balance)
-                    if choice == "Back":
-                        screen = "interface"
-
-                
-
-
-
-
-    finally:
-
-        termios.tcsetattr(
-            sys.stdin,
-            termios.TCSADRAIN,
-            old_settings
-        )
-        

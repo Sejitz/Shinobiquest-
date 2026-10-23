@@ -11,43 +11,25 @@ def add_item(player, item, amount=1):
     save_game(player)
 
 
-def inventory(player):
-    print("\n--===Inventory===--")
+def heal(player):
 
-    if player["inventory"] == {}:
-        print("Your Inventory Is Empty")
-    else:
-        for item in player["inventory"]:
-            # important____f
-            print(f"{item}: x{player['inventory'][item]}")
+    if player["inventory"]["potion"] <= 0:
+        # print("You do not have any potion!")
+        pass
 
-    while True:
-        print("\nUse item's 1st letter to choose.\nEg. [p] for 'Potion'")
-        print("1. Exit Inventory\n")
+    if player["hp"] >= player["max_hp"]:
+        # print("Your Hp is full!")
+        pass
 
-        choice_inventory = input("Choose i: ").lower()
+    player["hp"] += 60
+    player["inventory"]["potion"] -= 1
 
-        if choice_inventory == "p":
-            if player["inventory"]["potion"] <= 0:
-                print("You do not have any potion!")
-                continue
+    # print("60 Hp has been healed!")
 
-            if player["hp"] >= player["max_hp"]:
-                print("Your Hp is full!")
-                continue
+    if player["hp"] > player["max_hp"]:
+        player["hp"] = player["max_hp"]
 
-            player["hp"] += 60
-            player["inventory"]["potion"] -= 1
+    # print(f"Current HP: {player['hp']}")
 
-            print("60 Hp has been healed!")
-            print(f"Potion left {player['inventory']['potion']}")
+    save_game(player)
 
-            if player["hp"] > player["max_hp"]:
-                player["hp"] = player["max_hp"]
-
-            print(f"Current HP: {player['hp']}")
-
-            save_game(player)
-
-        elif choice_inventory == "1":
-            break

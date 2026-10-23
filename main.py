@@ -13,12 +13,12 @@ from UI.menu import menu, draw_menu
 from UI.name import get_player_name
 
 from systems.save_system import save_game, load_game, temp
-from systems.inventory import add_item, inventory
+from systems.inventory import add_item, heal
 from systems.shop import shop
 from systems.battle import battle
 
 from UI.interface import battle_ui, choice_ui, draw_menu, get_player_name, interface_ui, inventory_ui, main_ui, shop_ui, village_ui  
-from data.variables import screen, potion_amount, kunai_amount, balance, player
+from data.variables import screen, balance, player
 
 console = Console()
 
@@ -59,9 +59,6 @@ try:
 
 
         screen = "main"
-        potion_amount = 0
-        kunai_amount = 0
-        balance = 0
 
         while True:
             if screen == "main":
@@ -123,6 +120,7 @@ try:
                     screen = "main"
                 elif choice == "Inventory":
                     screen = "inventory"
+                    
                 elif choice == "Shop":
                     screen = "shop"
                 elif choice == "Back":
@@ -132,9 +130,14 @@ try:
             #     choice = battle_ui(live)
                 
             elif screen == "inventory":
-                choice = inventory_ui(live, potion_amount, kunai_amount)
+                choice = inventory_ui(live, player['inventory']['potion'], player['inventory']['kunai'])
+                # console.print(repr(choice))
+                
                 if choice == "Back":
                     screen = "interface"
+                elif choice == f"Potion: {player['inventory']['potion']}":
+                    # print("healed")
+                    heal(player)
 
             elif screen == "shop":
                 choice = shop_ui(live, balance)
