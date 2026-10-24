@@ -145,7 +145,7 @@ try:
                     screen = "interface"
                 elif choice == f"Potion: {potion_price}":
                     shop_potion(player)
-                elif choice == f"Kunai: {kunai_price}":
+                elif choice == f"Kunai: {kunai_price}\n":
                     shop_kunai(player)
 finally:
 
@@ -154,4 +154,3 @@ finally:
             termios.TCSADRAIN,
             old_settings
         )
-        

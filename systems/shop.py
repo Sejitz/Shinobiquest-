@@ -16,7 +16,7 @@ def shop_kunai(player):
     if player["ryo"] >= 40:
         player["ryo"] -= 40
         add_item(player, "kunai", 1)
-        print(f"Ryo left: {player['ryo']}")
+        # print(f"Ryo left: {player['ryo']}")
     else:
         print("You do not have enough Ryo.")
 
